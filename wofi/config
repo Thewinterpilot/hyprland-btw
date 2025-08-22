@@ -1,0 +1,33 @@
+# mode & placement
+show=drun
+location=top           # or center/top_left/... (Rofi “0” == center) 
+width=700
+lines=8
+columns=2              # <-- multi-column
+dynamic_lines=false
+
+# icons
+allow_images=true      # enables app icons in drun
+image_size=36          # tweak to taste
+# icon theme comes from GTK; make sure Papirus-Dark is your active icon theme
+
+# search & UX
+matching=fuzzy
+insensitive=true
+hide_scroll=false
+prompt=
+
+# terminal
+term=foot
+
+# keybinds (vim-ish)
+key_up=Ctrl-k
+key_down=Ctrl-j
+key_left=Ctrl-h
+key_right=Ctrl-l
+key_submit=Return
+key_forward=Tab
+key_backward=Shift-ISO_Left_Tab
+
+# stylesheet
+style=/home/tony/.config/wofi/style.css
