@@ -1,8 +1,11 @@
-+TITLE: Hyprland on Arch — Minimal Setup Guide
-+AUTHOR: Tony, btw
+#+TITLE: Hyprland on Arch — Minimal Setup Guide
+#+AUTHOR: Tony, btw
+#+HUGO_BASE_DIR: ~/www/tonybtw.com/
+#+OPTIONS: broken-links:mark toc:nil
 
 * Table of Contents :toc:
-- [[#install-arch-linux-maybe-discuss-maybe-dont][Install Arch Linux (maybe discuss, maybe dont)]]
+- [[#intro][Intro]]
+- [[#install-arch-linux][Install Arch Linux]]
 - [[#install-required-tools-for-hyprland][Install required tools for hyprland]]
 - [[#create-config-file][Create config file]]
 - [[#load-hyprland][Load hyprland]]
@@ -13,13 +16,55 @@
   - [[#styles][Styles]]
 - [[#wallpaper][Wallpaper]]
 - [[#wofi][Wofi]]
-- [[#outro][Outro]]
+- [[#final-thoughts][Final Thoughts]]
 
-* Install Arch Linux (maybe discuss, maybe dont)
+* Intro
+What's up guys, my name is Tony, and today, I'm going to give you a quick and painless guide
+on installing Hyprland on Arch linux.
+
+Hyprland is a dynamic window manager and wayland compositor that is highly customizable, and it
+emphasizes aesthetics, functionality, and extensibility.
+
+We're going to be using Arch linux today, but hyprland is available on most distrobutions, so if you
+are a NixOS user, or Gentoo, or even Debian, check out the wiki for installation instructions, but other
+than that, the customization aspect of this guide will still apply to you.
+
+At the end of this guide, you will no longer be using x11, and you will be able to fully
+customize your own build of hyprland on your own hardware.
+
+* Install Arch Linux
 - basic stuff
 - pacstrap everything
 
+The first thing I'm going to do is install a fresh Arch linux, and since today's guide is not about
+how to install Arch linux, I'm going to speed through that process and catch you guys at the login
+screen. If you want help installing arch linux, check out my Arch Linux tutorial.
+
+[[https://youtu.be/oeDbo-HRaZo][Arch Linux Tutorial]]
+
 * Install required tools for hyprland
+
+Alright, so we're staring at a very minimal arch build, we only installed base, base-devel, linux, linux-firmware, and sof-firmware.
+That's all you need to get started, and if you are an arch user, you can start basically anywhere as long as you've installed these
+basic packages, and got a bootloader up and running.
+
+So lets start by installing all of the required packages for today's setup. The beatiful thing about starting on a fresh install
+like this is that, you guys get to see the most minimal setup as possible in terms of packages. So let's grab all the hyprland
+tools.
+
+The 'hyprland' package actually comes with a lot on Arch linux. It comes with the wayland compositor among other things. Let's grab that,
+xorg-xwayland (just in case we need to use xwayland utils), and hyprpaper (a minimal hyprland wallpaper tool)
+
+[[https://archlinux.org/packages/extra/x86_64/hyprland/][Hyprland Arch Wiki Page]]
+
+For other packages, I'm going to be using vim today to edit all the files, you can feel free to use your text editor of choice.
+We need wofi (an application launcher for wayland), foot (a terminal emulator in wayland), waybar (the powerbar that we'll be using today),
+dolphin (a file manager that works in wayland), and firefox. Let's also grab git for version controlling.
+
+Lastly, we want a nerd font to render some of the icons here, so lets grab `ttf-jetbrains-mono-nerd`
+
+And that's basically it. We really don't need much, and if we need anything else along the way, we can just grab it from pacman.
+
 - hyprland
 - vim
 - git
@@ -28,63 +73,116 @@
 - firefox
 - wofi
 - kitty (hyprland default terminal)
-- btop
 - dolphin
 - jetbrains mono nerd
 
 #+begin_src sh
-sudo pacman -S hyprland xorg-xwayland hyprpicker hyprpaper hyprlock
-sudo pacman -S vim wofi kitty git tmux foot btop waybar firefox dolphin
+sudo pacman -S hyprland xorg-xwayland hyprpaper
+sudo pacman -S vim wofi git foot waybar firefox dolphin
 sudo pacman -S ttf-jetbrains-mono-nerd
 #+end_src
 
 * Create config file
+
+Let's create the directory for the hyprland config file here, and copy the template config file into it. This is important because we're using foot
+instead of kitty, we have to do this before launching hyprland.
+
 #+begin_src sh
 mkdir -p ~/.config/hypr; cp /usr/share/hypr/hyprland.conf ~/.config/hypr/
 #+end_src
 
 Edit this file, swap kitty with foot.
 
+#+begin_src hyprlang
+$terminal = foot;
+#+end_src
+
 * Load hyprland
+
+We're ready to launch hyprland, and we can do so easily by just typing hyprland.
 
 #+begin_src sh
 hyprland
 #+end_src
 
 From inside of hyprland, we'll open a terminal with super Q
-lets immediately edit the monitors block:
+and lets immediately edit the monitors block:
+
+Since my monitor is 1920x1080, I'll set that in my hyprland config. Also, we'll change this last 'auto' flag to 1.0.
+This is the scale flag, and auto will set it to 1.5.
 
 #+begin_example
-monitor=,1920x1080,auto,auto
+monitor=,1920x1080,auto,1.0
 #+end_example
 
-We can display what monitor we have with:
+You can display what monitor we have with:
 
 #+begin_src sh
 hyprctl monitors
 #+end_src
 
-For me: Install nvim, and alias vim to nvim. use tokyonight theme.
-
 * Foot config
-now lets jump into our foot config to quickly make our terminal readable
-lets set this up, .config/foot.ini 
+
+Now lets jump into our foot config to quickly make our terminal readable
+lets set this up,
+#+begin_src sh
+mkdir .config/foot
+vim .config/foot/foot.ini
+#+end_src
 
 #+begin_src ini
 font=JetBrainsMono NF:size=16
 pad=8x8 center-when-maximized-and-fullscreen
 #+end_src
 
-Consider just adding the tokyonight theme for this right now..
+And we're going to go with a tokyonight theme for todays rice, so lets check this website out for tokyonight ports. I'll leave a link
+to this site below the subscribe button of this video.
 
-This will make it so our terminal is readable. we'll come back and hit the colors later.
+[[https://wixdaq.github.io/Tokyo-Night-Website/ports.html][Tokyo Night Theme Site]]
+
+Let's navigate to 'foot', and copy this colors block, and add it to our foot.ini file.
+
+#+begin_src ini
+[colors]
+foreground=c0caf5
+background=1a1b26
+
+## Normal/regular colors (color palette 0-7)
+regular0=15161E  # black
+regular1=f7768e  # red
+regular2=9ece6a  # green
+regular3=e0af68  # yellow
+regular4=7aa2f7  # blue
+regular5=bb9af7  # magenta
+regular6=7dcfff  # cyan
+regular7=a9b1d6  # white
+
+## Bright colors (color palette 8-15)
+bright0=414868   # bright black
+bright1=f7768e   # bright red
+bright2=9ece6a   # bright green
+bright3=e0af68   # bright yellow
+bright4=7aa2f7   # bright blue
+bright5=bb9af7   # bright magenta
+bright6=7dcfff   # bright cyan
+bright7=c0caf5   # bright white
+
+## dimmed colors (see foot.ini(5) man page)
+dim0=ff9e64
+dim1=db4b4b
+
+alpha=0.9
+#+end_src
+
+Alright that looks great. Let's jump into the next step
 
 * Hyprland and Waybar
 
+When we modify hyprlands config file, it automatically refreshes hyprland on save, which is convenient.
 lets jump back into the hyprland.conf file and change a few things for QoL
 
-we're gonna use waybar today, and in order to quickly reload that, we can use
-this script here:
+We're gonna use waybar today, and in order to quickly reload that, we can use one line command here:
+Also, to add it to start when we load hyprland, lets add it to exec-once.
 
 #+begin_src conf
 $reload_waybar = pkill waybar; waybar &
@@ -104,21 +202,6 @@ terminal, and D for $menu (which is wofi)
 bind = $mainMod, Return, exec, $terminal
 bind = $mainMod, Q, killactive,
 bind = $mainMod, D, exec, $menu
-#+end_src
-
-Let's change some of the gaps. Feel free to customize this for yourself here:
-#+begin_src hyprlang
-general {
-    gaps_in = 2
-    gaps_out = 2
-    border_size = 1
-}
-
-decoration {
-    rounding = 0
-    rounding_power = 0
-}
-
 #+end_src
 
 Now that these are good to go, lets do one or two more huge qol updates:
@@ -142,23 +225,23 @@ Alright, we should be good to go for now and move on to the next step.
 
 * Waybar
 
-Now that Waybar is binded to super R, lets go ahead and load it once with super R. Beautiful defualt waybar >_<
+Now that Waybar is binded to super R, lets go ahead and load it once with super R.
 Let's customize this by opening up the config file:
 Lets copy over the default waybar config, since its loading a null config file now.
-To ensure we can edit it, we need to change ownership of the file from root to tony.
+To ensure we can edit it, we need to change ownership of the file from root to tony. (use your username here)
 
 #+begin_src bash
 sudo cp -R /etc/xdg/waybar ~/.config/waybar
 sudo chown -R tony:tony .config/waybar
+vim .config/waybar/.
 #+end_src
-
-`vim .config/waybar/.`
 
 So this has 2 parts to it, style.css, and config.jsconc. let's start with config.jsonc, thats where all the
 widgets, and workspace stuff lives.
 
 At the top of this file we see layer, position, etc. If you are a bottom bar user, you can swap this to bottom, and it would look like this:
 We're gonna put the bar on the top today, and build it out from there.
+
 ** Config.jsonc
 *** Left Modules
 
@@ -208,7 +291,7 @@ Luckily, these modules use the same syntax, so all we need to do is switch sway 
 So lets just uncomment this block, and change 'sway' to 'hyprland'.
 Lets save this file, and reload waybar with that super R keybind.
 
-and now we see this workpace module on the left side. Beautiful. Let's clean this up a little bit.
+And now we see this workpace module on the left side. Beautiful. Let's clean this up a little bit.
 
 These Icons are customizable, similar to my dwm config, where if you know whats going on that workspace
 at all times, you can use a font awesome or nerd font icon for that application, and throw it on that
@@ -268,7 +351,7 @@ Lets leave this empty for now. It's easier to handle spacing imo if we just do l
 *** Right Modules
 
 Lets start by deleting a lot of these modules. most of them aren't needed, and we are going for a semi-minimal
-config today. Remember, that you can take this information from this video, and really make your bar custom for
+config today. Remember, that you can take this information from this tutorial, and really make your bar custom for
 your own setup.
 
 #+begin_src json
@@ -320,6 +403,7 @@ Let's make this network widget super minimal.
 #+end_src
 
 Let's change the CPU widget to something more clean:
+
 #+begin_src json
 "cpu": {
     "format": "CPU: {usage}%",
@@ -328,6 +412,7 @@ Let's change the CPU widget to something more clean:
 #+end_src
 
 Same thing for RAM:
+
 #+begin_src json
 "memory": {
     "format": "Mem: {used}GiB"
@@ -415,10 +500,12 @@ Now lets add this separator in between all of our widgets. it will look weird fo
 And thats it for the modules, we can move into the styles of these now.
 
 ** Styles
-The first thing we want to do is have our colors match the tokyonight aesthetic, so lets define these colors at the top of the file. Note, you can just copy and
-paste these from my github that I will provide a link to below the subscribe button, I got them from the tokyonight website.
 
-(open github.com/tonybanters/hyprlandbtw)
+The first thing we want to do is have our colors match the tokyonight aesthetic, so lets define these colors at the top of the file. Note, you can just copy and
+paste these from my github repo.
+
+[[https://github.com/tonybanters/hyprland-btw][Github Repo]]
+
 #+begin_src css
 @define-color bg    #1a1b26;
 @define-color fg    #a9b1d6;
@@ -484,7 +571,7 @@ are all the same, but there is a visual indicator of the active workspace.
 So this basically says that if the workspace is active, it will be visually indicated with the purple underline. if it
 is not active, but not empty, it will still be cyan, but not be underlined. Waybar has a weird issue where when you swap
 to a new workspace, and dont open an application on it yet, its technically empty, and active. so we will cover for that case here
-as well. Feel free to copy and paste this from my config file in the github link below the subscribe button.
+as well. Feel free to copy and paste this from my config file.
 
 Let's clean up this file now. I think we can delete pretty much everything except this massive block that just adds padding to every
 widget here.
@@ -576,23 +663,23 @@ Last thing to do is get a proper config for wofi.
 * Wofi
 
 For this wofi config, we'll grab it from that same website of tokyonight configs, but I modified it slightly as follows:
-
+#+begin_src sh
 mkdir .config/wofi
 vim .config/wofi/config
+#+end_src
 
 #+begin_src
 # mode & placement
 show=drun
-location=top           # or center/top_left/... (Rofi “0” == center)
+location=top
 width=700
 lines=8
-columns=2              # <-- multi-column
+columns=2
 dynamic_lines=false
 
 # icons
-allow_images=true      # enables app icons in drun
-image_size=36          # tweak to taste
-# icon theme comes from GTK; make sure Papirus-Dark is your active icon theme
+allow_images=true
+image_size=36
 
 # search & UX
 matching=fuzzy
@@ -616,9 +703,12 @@ key_backward=Shift-ISO_Left_Tab
 style=/home/tony/.config/wofi/style.css
 #+end_src
 
-and to make that stylesheet, its right here in the style.css file of that config,
+And to make that stylesheet, its right here in the style.css file of that config,
 
-so lets make this file: vim ~/.config/wofi/style.css
+so lets make this file:
+#+begin_src sh
+vim ~/.config/wofi/style.css
+#+end_src
 
 #+begin_src css
 ,* {
@@ -684,7 +774,9 @@ window {
 And this system is looking pretty good. We got our waybar all setup, our widgets, we have our foot terminal looking good, our wallpaper, and our wofi config.
 This is just the beginning of hyprland, but this should be a great source for you to start customizing your own personal setup.
 
-* Outro
+* Final Thoughts
 
-Alright, thats gonna be it for todays video. If you have any questions or recommendations on any other linux related content, as usual just drop a comment.
-It wouldn't be a proper video without an obligatory neofetch.
+Thanks so much for checking out this tutorial. If you got value from it, and you want to find more tutorials like this, check out
+my youtube channel here: [[https://youtube.com/@tony-btw][YouTube]], or my website here: [[https://www.tonybtw.com][tony,btw]]
+
+You can support me here: [[https://ko-fi.com/tonybtw][kofi]]
