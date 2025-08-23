@@ -1,15 +1,14 @@
 # mode & placement
 show=drun
-location=top           # or center/top_left/... (Rofi “0” == center) 
+location=top           
 width=700
 lines=8
-columns=2              # <-- multi-column
+columns=2              
 dynamic_lines=false
 
 # icons
-allow_images=true      # enables app icons in drun
-image_size=36          # tweak to taste
-# icon theme comes from GTK; make sure Papirus-Dark is your active icon theme
+allow_images=true      
+image_size=36          
 
 # search & UX
 matching=fuzzy
