@@ -53,6 +53,7 @@ button:hover {
 #battery,
 #cpu,
 #memory,
+#pulseaudio,
 #disk,
 #network,
 #tray {
